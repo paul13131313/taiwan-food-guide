@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台湾味覺散歩 — Taiwan Food Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,600;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0A0A0A;
+    --dark: #141414;
+    --card-bg: #1A1A1A;
+    --white: #FAFAFA;
+    --off-white: #E8E4DF;
+    --cream: #D4C9B8;
+    --red: #E63B2E;
+    --gold: #C8A96E;
+    --text-muted: #8A8580;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', 'Zen Kaku Gothic New', sans-serif;
+    background: var(--black); color: var(--white);
+    overflow-x: hidden; -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
+  img { display: block; }
+
+  /* ===== Nav ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.2rem clamp(1.5rem, 4vw, 3rem);
+    display: flex; justify-content: space-between; align-items: center;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+  nav.scrolled { background: rgba(10,10,10,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .nav-logo { font-family: 'Noto Serif JP', serif; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: var(--cream); text-decoration: none; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.3s; font-weight: 500; }
+  .nav-links a:hover { color: var(--red); }
+  @media (max-width: 640px) { .nav-links { display: none; } }
+
+  /* ===== Hero ===== */
+  .hero { height: 100vh; min-height: 600px; position: relative; display: flex; align-items: flex-end; overflow: hidden; }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1508424757105-b6d5ad9329d0?w=1600&q=80') center/cover no-repeat;
+    transform: scale(1.05); animation: heroZoom 20s ease-in-out infinite alternate;
+  }
+  @keyframes heroZoom { from { transform: scale(1.05); } to { transform: scale(1.12); } }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.3) 40%, rgba(10,10,10,0.1) 100%); }
+  .hero-content { position: relative; z-index: 2; padding: 0 clamp(1.5rem, 5vw, 4rem) clamp(3rem, 8vh, 6rem); max-width: 800px; }
+  .hero-tag {
+    display: inline-block; font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold); border: 1px solid var(--gold); padding: 6px 16px; border-radius: 2px;
+    margin-bottom: 1.5rem; opacity: 0; animation: fadeIn 0.8s 0.3s forwards;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif JP', serif; font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 900; line-height: 1.1; margin-bottom: 1rem; opacity: 0; animation: slideUp 1s 0.5s forwards;
+  }
+  .hero h1 .en { display: block; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-style: italic; font-size: 0.3em; color: var(--cream); letter-spacing: 0.06em; margin-top: 0.6rem; }
+  .hero-desc { font-size: 1rem; line-height: 1.9; color: var(--cream); max-width: 520px; opacity: 0; animation: slideUp 1s 0.7s forwards; }
+  .hero-scroll { position: absolute; bottom: 2rem; right: clamp(1.5rem, 5vw, 4rem); z-index: 2; writing-mode: vertical-rl; font-size: 0.65rem; letter-spacing: 0.3em; color: var(--cream); opacity: 0; animation: fadeIn 1s 1.2s forwards; }
+  .hero-scroll::after { content: ''; display: block; width: 1px; height: 60px; background: var(--gold); margin: 1rem auto 0; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== Ticker ===== */
+  .ticker { background: var(--red); padding: 0.7rem 0; overflow: hidden; white-space: nowrap; }
+  .ticker-track { display: inline-flex; animation: tickerScroll 30s linear infinite; }
+  .ticker-item { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 0 2.5rem; }
+  .ticker-item .dot { display: inline-block; width: 4px; height: 4px; background: var(--white); border-radius: 50%; margin-right: 2rem; vertical-align: middle; opacity: 0.5; }
+  @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ===== Section Title ===== */
+  .section-title { margin-bottom: 3rem; }
+  .section-title .label { font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--red); margin-bottom: 0.8rem; font-weight: 700; }
+  .section-title h2 { font-family: 'Noto Serif JP', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.3; }
+  .section-title h2 .sub { display: block; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-style: italic; font-size: 0.4em; color: var(--text-muted); margin-top: 0.4rem; }
+
+  /* ===== Bento Grid ===== */
+  .featured { padding: clamp(4rem, 8vw, 7rem) 0; }
+  .bento { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: minmax(200px, auto); gap: 12px; }
+  .bento-item { position: relative; border-radius: 12px; overflow: hidden; cursor: pointer; opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
+  .bento-item.visible { opacity: 1; transform: translateY(0); }
+  .bento-item:nth-child(1) { grid-column: 1 / 8; grid-row: 1 / 3; }
+  .bento-item:nth-child(2) { grid-column: 8 / 13; grid-row: 1 / 2; }
+  .bento-item:nth-child(3) { grid-column: 8 / 13; grid-row: 2 / 3; }
+  .bento-item:nth-child(4) { grid-column: 1 / 5; grid-row: 3 / 4; }
+  .bento-item:nth-child(5) { grid-column: 5 / 9; grid-row: 3 / 4; }
+  .bento-item:nth-child(6) { grid-column: 9 / 13; grid-row: 3 / 4; }
+  @media (max-width: 768px) {
+    .bento { grid-template-columns: 1fr 1fr; grid-auto-rows: 220px; }
+    .bento-item:nth-child(1) { grid-column: 1 / 3; }
+    .bento-item:nth-child(n+2) { grid-column: auto; grid-row: auto; }
+  }
+  .bento-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+  .bento-item:hover .bento-img { transform: scale(1.06); }
+  .bento-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0) 55%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: clamp(1rem, 2vw, 1.8rem); transition: background 0.4s;
+  }
+  .bento-item:hover .bento-overlay { background: linear-gradient(0deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.15) 65%); }
+  .bento-tag { display: inline-block; background: var(--red); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; padding: 3px 10px; border-radius: 2px; margin-bottom: 0.5rem; width: fit-content; }
+  .bento-overlay h3 { font-family: 'Noto Serif JP', serif; font-size: clamp(1rem, 2vw, 1.5rem); font-weight: 700; margin-bottom: 0.2rem; }
+  .bento-overlay .shop { font-size: 0.78rem; color: var(--cream); opacity: 0.8; }
+  .bento-overlay .meta { display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.72rem; color: var(--gold); font-weight: 500; }
+  .bento-desc { font-size: 0.82rem; color: var(--off-white); line-height: 1.6; margin-top: 0.5rem; max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.5s, opacity 0.5s; }
+  .bento-item:hover .bento-desc { max-height: 100px; opacity: 1; margin-top: 0.7rem; }
+
+  /* ===== Horizontal Scroll ===== */
+  .more-shops { padding: clamp(4rem, 8vw, 7rem) 0; background: var(--dark); }
+  .h-scroll-wrap { overflow-x: auto; padding-bottom: 1rem; scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
+  .h-scroll-wrap::-webkit-scrollbar { height: 4px; }
+  .h-scroll-wrap::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+  .h-scroll { display: flex; gap: 1.2rem; padding: 0 clamp(1rem, 4vw, 3rem); width: max-content; }
+  .h-card { width: 300px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: var(--card-bg); transition: transform 0.4s; cursor: pointer; }
+  .h-card:hover { transform: translateY(-6px); }
+  .h-card-img-wrap { overflow: hidden; position: relative; }
+  .h-card-img { width: 100%; height: 200px; object-fit: cover; transition: transform 0.6s; }
+  .h-card:hover .h-card-img { transform: scale(1.05); }
+  .price-badge { position: absolute; bottom: 10px; right: 10px; background: var(--black); color: var(--gold); font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(200,169,110,0.3); }
+  .h-card-body { padding: 1.2rem 1.3rem 1.5rem; }
+  .h-card-body h3 { font-family: 'Noto Serif JP', serif; font-size: 1.15rem; margin-bottom: 0.2rem; }
+  .h-card-body .shop { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+  .h-card-body p { font-size: 0.82rem; color: var(--cream); line-height: 1.65; opacity: 0.8; }
+  .h-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.72rem; }
+  .h-card-footer .area { color: var(--text-muted); }
+  .h-card-footer .stars { color: var(--gold); letter-spacing: 1px; }
+
+  /* ===== Area Mosaic ===== */
+  .areas { padding: clamp(4rem, 8vw, 7rem) 0; position: relative; }
+  .areas::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .area-mosaic { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 768px) { .area-mosaic { grid-template-columns: repeat(2, 1fr); } }
+  .area-tile { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; cursor: pointer; }
+  .area-tile img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+  .area-tile:hover img { transform: scale(1.08); }
+  .area-tile-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(10,10,10,0.8) 0%, rgba(10,10,10,0.1) 60%);
+    display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+    padding: 1.5rem 1rem; text-align: center; transition: background 0.4s;
+  }
+  .area-tile:hover .area-tile-overlay { background: linear-gradient(0deg, rgba(230,59,46,0.7) 0%, rgba(10,10,10,0.2) 60%); }
+  .area-tile-overlay h3 { font-family: 'Noto Serif JP', serif; font-size: 1.3rem; }
+  .area-tile-overlay p { font-size: 0.75rem; color: var(--cream); opacity: 0.8; margin-top: 0.2rem; }
+
+  /* ===== Tips ===== */
+  .tips { padding: clamp(4rem, 8vw, 7rem) 0; background: var(--dark); }
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .tip-card { background: var(--card-bg); border-radius: 12px; padding: 2rem 1.5rem; border: 1px solid rgba(255,255,255,0.04); transition: border-color 0.3s, transform 0.3s; }
+  .tip-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+  .tip-card .num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 600; color: var(--red); line-height: 1; margin-bottom: 0.8rem; }
+  .tip-card h3 { font-family: 'Noto Serif JP', serif; font-size: 1.05rem; margin-bottom: 0.6rem; line-height: 1.5; }
+  .tip-card p { font-size: 0.85rem; line-height: 1.75; color: var(--text-muted); }
+
+  /* ===== Footer ===== */
+  footer { padding: 4rem clamp(1.5rem, 4vw, 3rem) 2.5rem; border-top: 1px solid rgba(255,255,255,0.06); }
+  .footer-inner { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { font-family: 'Noto Serif JP', serif; font-size: 1.2rem; font-weight: 700; }
+  .footer-text { font-size: 0.75rem; color: var(--text-muted); }
+
+  .reveal { opacity: 0; transform: translateY(25px); transition: opacity 0.7s, transform 0.7s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav id="nav">
+  <div class="nav-logo">台湾味覺散歩</div>
+  <ul class="nav-links">
+    <li><a href="#featured">おすすめ</a></li>
+    <li><a href="#more">もっと見る</a></li>
+    <li><a href="#areas">エリア</a></li>
+    <li><a href="#tips">心得</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-tag">台湾グルメ完全ガイド</span>
+    <h1>台湾味覺散歩<span class="en">A Culinary Journey Through Taiwan</span></h1>
+    <p class="hero-desc">夜市の湯気、路地裏の名店、地元の人が通う食堂——<br>本当においしい台湾を、一皿ずつご案内します。</p>
+  </div>
+  <div class="hero-scroll">SCROLL</div>
+</section>
+
+<!-- Ticker -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="dot"></span>牛肉麺</span>
+    <span class="ticker-item"><span class="dot"></span>小籠包</span>
+    <span class="ticker-item"><span class="dot"></span>鶏排</span>
+    <span class="ticker-item"><span class="dot"></span>魯肉飯</span>
+    <span class="ticker-item"><span class="dot"></span>臭豆腐</span>
+    <span class="ticker-item"><span class="dot"></span>珍珠奶茶</span>
+    <span class="ticker-item"><span class="dot"></span>鹹豆漿</span>
+    <span class="ticker-item"><span class="dot"></span>芒果冰</span>
+    <span class="ticker-item"><span class="dot"></span>蚵仔煎</span>
+    <span class="ticker-item"><span class="dot"></span>胡椒餅</span>
+    <span class="ticker-item"><span class="dot"></span>牛肉麺</span>
+    <span class="ticker-item"><span class="dot"></span>小籠包</span>
+    <span class="ticker-item"><span class="dot"></span>鶏排</span>
+    <span class="ticker-item"><span class="dot"></span>魯肉飯</span>
+    <span class="ticker-item"><span class="dot"></span>臭豆腐</span>
+    <span class="ticker-item"><span class="dot"></span>珍珠奶茶</span>
+    <span class="ticker-item"><span class="dot"></span>鹹豆漿</span>
+    <span class="ticker-item"><span class="dot"></span>芒果冰</span>
+    <span class="ticker-item"><span class="dot"></span>蚵仔煎</span>
+    <span class="ticker-item"><span class="dot"></span>胡椒餅</span>
+  </div>
+</div>
+
+<!-- Featured Bento -->
+<section class="featured container" id="featured">
+  <div class="section-title reveal">
+    <p class="label">Editor's Pick</p>
+    <h2>絶対に外せない名店<span class="sub">Our Top Recommendations</span></h2>
+  </div>
+  <div class="bento">
+    <!-- 牛肉麺 (大) -->
+    <div class="bento-item">
+      <img class="bento-img" src="https://images.unsplash.com/photo-1555126634-323283e090fa?w=900&q=80" alt="牛肉麺">
+      <div class="bento-overlay">
+        <span class="bento-tag">殿堂入り</span>
+        <h3>牛肉麺</h3>
+        <div class="shop">📍 林東芳牛肉麵 — 台北・中山</div>
+        <div class="meta"><span>TWD 220</span><span>★★★★★</span></div>
+        <p class="bento-desc">八角の香りが漂う深い紅のスープに、手打ち太麺とホロホロの牛すじ。台北に来たら必ず食べるべき一杯。</p>
+      </div>
+    </div>
+    <!-- 小籠包 -->
+    <div class="bento-item">
+      <img class="bento-img" src="https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=600&q=80" alt="小籠包">
+      <div class="bento-overlay">
+        <span class="bento-tag">行列必至</span>
+        <h3>小籠包</h3>
+        <div class="shop">📍 鼎泰豐 本店 — 台北・大安</div>
+        <div class="meta"><span>TWD 250</span><span>★★★★★</span></div>
+        <p class="bento-desc">薄い皮を破ると溢れ出す黄金色のスープ。世界に名を轟かせる名店の原点。</p>
+      </div>
+    </div>
+    <!-- マンゴーかき氷 -->
+    <div class="bento-item">
+      <img class="bento-img" src="https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&q=80" alt="マンゴーかき氷">
+      <div class="bento-overlay">
+        <span class="bento-tag">夏の定番</span>
+        <h3>マンゴーかき氷</h3>
+        <div class="shop">📍 冰讚 — 台北・萬華</div>
+        <div class="meta"><span>TWD 100</span><span>★★★★☆</span></div>
+        <p class="bento-desc">フレッシュな愛文マンゴーが山盛り。ふわふわの氷にマンゴーソースが絡む夏の至福。</p>
+      </div>
+    </div>
+    <!-- 珍珠奶茶 -->
+    <div class="bento-item">
+      <img class="bento-img" src="https://images.unsplash.com/photo-1558857563-b371033873b8?w=600&q=80" alt="珍珠奶茶">
+      <div class="bento-overlay">
+        <span class="bento-tag">発祥の店</span>
+        <h3>珍珠奶茶</h3>
+        <div class="shop">📍 春水堂 — 台中</div>
+        <div class="meta"><span>TWD 75</span></div>
+        <p class="bento-desc">もちもちの大粒タピオカと芳醇な茶葉のハーモニー。全てはここから始まった。</p>
+      </div>
+    </div>
+    <!-- 鶏排 -->
+    <div class="bento-item">
+      <img class="bento-img" src="https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=600&q=80" alt="鶏排">
+      <div class="bento-overlay">
+        <span class="bento-tag">夜市名物</span>
+        <h3>鶏排（ジーパイ）</h3>
+        <div class="shop">📍 豪大大雞排 — 士林夜市</div>
+        <div class="meta"><span>TWD 85</span></div>
+        <p class="bento-desc">顔より大きいジャンボフライドチキン。五香粉とサクサク衣が最高。</p>
+      </div>
+    </div>
+    <!-- 鹹豆漿 -->
+    <div class="bento-item">
+      <img class="bento-img" src="https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&q=80" alt="鹹豆漿">
+      <div class="bento-overlay">
+        <span class="bento-tag">朝ごはん</span>
+        <h3>鹹豆漿</h3>
+        <div class="shop">📍 阜杭豆漿 — 善導寺</div>
+        <div class="meta"><span>TWD 45</span></div>
+        <p class="bento-desc">ふわりと固めた豆乳に干しエビや搾菜の旨味。揚げパンを浸すのが通の食べ方。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- More Shops -->
+<section class="more-shops" id="more">
+  <div class="container">
+    <div class="section-title reveal">
+      <p class="label">More to Explore</p>
+      <h2>まだまだあります<span class="sub">Hidden Gems & Local Favorites</span></h2>
+    </div>
+  </div>
+  <div class="h-scroll-wrap">
+    <div class="h-scroll">
+      <div class="h-card">
+        <div class="h-card-img-wrap">
+          <img class="h-card-img" src="https://images.unsplash.com/photo-1583032015879-e5022cb87c3b?w=500&q=80" alt="魯肉飯">
+          <span class="price-badge">TWD 40</span>
+        </div>
+        <div class="h-card-body">
+          <h3>魯肉飯</h3>
+          <div class="shop">📍 金峰魯肉飯</div>
+          <p>甘辛く煮込まれた豚バラのそぼろが白ご飯にとろり。台湾ソウルフードの頂点。</p>
+          <div class="h-card-footer"><span class="area">台北・中正</span><span class="stars">★★★★★</span></div>
+        </div>
+      </div>
+      <div class="h-card">
+        <div class="h-card-img-wrap">
+          <img class="h-card-img" src="https://images.unsplash.com/photo-1625398407796-82650a8c135f?w=500&q=80" alt="蚵仔煎">
+          <span class="price-badge">TWD 65</span>
+        </div>
+        <div class="h-card-body">
+          <h3>蚵仔煎</h3>
+          <div class="shop">📍 圓環邊蚵仔煎</div>
+          <p>ぷりぷりの牡蠣をもちもちの生地で包んだ台湾定番。甘辛ソースとの相性が抜群。</p>
+          <div class="h-card-footer"><span class="area">台北・寧夏夜市</span><span class="stars">★★★★☆</span></div>
+        </div>
+      </div>
+      <div class="h-card">
+        <div class="h-card-img-wrap">
+          <img class="h-card-img" src="https://images.unsplash.com/photo-1607301405390-d831c242f59b?w=500&q=80" alt="胡椒餅">
+          <span class="price-badge">TWD 60</span>
+        </div>
+        <div class="h-card-body">
+          <h3>胡椒餅</h3>
+          <div class="shop">📍 福州世祖胡椒餅</div>
+          <p>窯焼きのカリカリ生地から肉汁と胡椒の香りが溢れ出す。饒河夜市の超人気店。</p>
+          <div class="h-card-footer"><span class="area">台北・饒河夜市</span><span class="stars">★★★★★</span></div>
+        </div>
+      </div>
+      <div class="h-card">
+        <div class="h-card-img-wrap">
+          <img class="h-card-img" src="https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=500&q=80" alt="臭豆腐">
+          <span class="price-badge">TWD 55</span>
+        </div>
+        <div class="h-card-body">
+          <h3>臭豆腐</h3>
+          <div class="shop">📍 戴記獨臭之家</div>
+          <p>匂いは強烈だが味は絶品。外はカリッと中はふわっと。台湾通への登竜門。</p>
+          <div class="h-card-footer"><span class="area">台北・深坑</span><span class="stars">★★★★☆</span></div>
+        </div>
+      </div>
+      <div class="h-card">
+        <div class="h-card-img-wrap">
+          <img class="h-card-img" src="https://images.unsplash.com/photo-1541696490-8744a5dc0228?w=500&q=80" alt="擔仔麵">
+          <span class="price-badge">TWD 50</span>
+        </div>
+        <div class="h-card-body">
+          <h3>擔仔麵</h3>
+          <div class="shop">📍 度小月擔仔麵</div>
+          <p>台南発祥の小さな一杯。エビの出汁が効いたスープと肉燥が織りなす深い味わい。</p>
+          <div class="h-card-footer"><span class="area">台南・中西區</span><span class="stars">★★★★★</span></div>
+        </div>
+      </div>
+      <div class="h-card">
+        <div class="h-card-img-wrap">
+          <img class="h-card-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&q=80" alt="鳳梨酥">
+          <span class="price-badge">TWD 350 /箱</span>
+        </div>
+        <div class="h-card-body">
+          <h3>鳳梨酥</h3>
+          <div class="shop">📍 微熱山丘 SunnyHills</div>
+          <p>土鳳梨100%使用の本格パイナップルケーキ。お土産の大本命。</p>
+          <div class="h-card-footer"><span class="area">台北・民生</span><span class="stars">★★★★★</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Areas -->
+<section class="areas container" id="areas">
+  <div class="section-title reveal">
+    <p class="label">Area Guide</p>
+    <h2>エリアから探す<span class="sub">Explore by Region</span></h2>
+  </div>
+  <div class="area-mosaic">
+    <div class="area-tile">
+      <img src="https://images.unsplash.com/photo-1470004914212-05527e49370b?w=500&q=80" alt="台北">
+      <div class="area-tile-overlay"><h3>台北</h3><p>夜市グルメの聖地</p></div>
+    </div>
+    <div class="area-tile">
+      <img src="https://images.unsplash.com/photo-1530521954074-e64f6810b32d?w=500&q=80" alt="台南">
+      <div class="area-tile-overlay"><h3>台南</h3><p>台湾料理の原点</p></div>
+    </div>
+    <div class="area-tile">
+      <img src="https://images.unsplash.com/photo-1547981609-4f6b1a097e05?w=500&q=80" alt="高雄">
+      <div class="area-tile-overlay"><h3>高雄</h3><p>海鮮と南国フルーツ</p></div>
+    </div>
+    <div class="area-tile">
+      <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=500&q=80" alt="九份">
+      <div class="area-tile-overlay"><h3>九份</h3><p>レトロ茶館巡り</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Tips -->
+<section class="tips" id="tips">
+  <div class="container">
+    <div class="section-title reveal">
+      <p class="label">Insider Tips</p>
+      <h2>台湾グルメの心得<span class="sub">Things to Know Before You Go</span></h2>
+    </div>
+    <div class="tips-grid">
+      <div class="tip-card"><div class="num">01</div><h3>朝ごはんは外で食べるのが台湾流</h3><p>台湾の人は朝食を外で買って食べるのが日常。早朝から営業する「早餐店」で蛋餅や豆漿をぜひ。</p></div>
+      <div class="tip-card"><div class="num">02</div><h3>夜市は21時以降が本番</h3><p>21時を過ぎると観光客が減り、地元の人で賑わう。これぞ本来の夜市の姿。</p></div>
+      <div class="tip-card"><div class="num">03</div><h3>「小吃」を制する者が台湾を制す</h3><p>台湾グルメの真髄は路地裏の一品料理屋台「小吃（シャオチー）」にあり。</p></div>
+      <div class="tip-card"><div class="num">04</div><h3>行列は最高のレビュー</h3><p>台湾の人は美味しい店のためなら並ぶ。行列のある店はハズレなし。地元民の後ろに並ぼう。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">台湾味覺散歩</div>
+    <div class="footer-text">© 2025 Taiwan Food Guide — 一皿ずつ、台湾を味わう旅。</div>
+  </div>
+</footer>
+
+<script>
+  // Nav background on scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+
+  // Scroll reveal animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.bento-item, .reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
